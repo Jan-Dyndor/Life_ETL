@@ -1,0 +1,7 @@
+.databricks
+.databricks.env
+venv/
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+.vscode

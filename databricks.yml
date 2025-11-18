@@ -1,0 +1,19 @@
+# This is a Databricks asset bundle definition for Life_ETL_folder.
+# The Databricks extension requires databricks.yml configuration file.
+# See https://docs.databricks.com/dev-tools/bundles/index.html for documentation.
+
+bundle:
+  name: Life_ETL_folder
+
+targets:
+  dev:
+    mode: development
+    default: true
+    workspace:
+      host: https://dbc-60783f82-6b27.cloud.databricks.com
+
+  ## Optionally, there could be 'staging' or 'prod' targets here.
+  #
+  # prod:
+  #   workspace:
+  #     host: https://dbc-60783f82-6b27.cloud.databricks.com
