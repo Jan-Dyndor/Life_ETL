@@ -12,6 +12,10 @@ class UCConfig(BaseModel):
 class NBPConfig(BaseModel):
     table_a: str = "table_a"
     table_b: str = "table_b"
+    rate_type_a: str = "A"
+    rate_type_b: str = "B"
+    update_frequency_a: str = "DAILY"
+    update_frequency_b: str = "WEEKLY"
 
 
 class Config(BaseModel):
