@@ -7,6 +7,7 @@ class UCConfig(BaseModel):
     bronze_schema: str = "bronze"
     silver_schema: str = "silver"
     gold_schema: str = "gold"
+    gold_table: str = "gold_table"
 
 
 class NBPConfig(BaseModel):
@@ -18,9 +19,15 @@ class NBPConfig(BaseModel):
     update_frequency_b: str = "WEEKLY"
 
 
+class GitHub(BaseModel):
+    repo: str = "Life_ETL"
+    owner: str = "Jan-Dyndor"
+
+
 class Config(BaseModel):
     catalog: UCConfig = UCConfig()
     nbp: NBPConfig = NBPConfig()
+    github: GitHub = GitHub()
 
 
 config = Config()
