@@ -26,10 +26,6 @@ st.sidebar.header("Filters")
 
 st.write("Welcome at Analitycs page! ")
 
-tab_overview, tab_trends, tab_changes, tab_data = st.tabs(
-    ["Overview", "Trends", "Changes & Volatility", "Data"]
-)
-
 
 seleected_currency = st.sidebar.multiselect(
     "Select currencies",
@@ -61,12 +57,12 @@ chart_type = st.sidebar.radio(
     horizontal=True,
 )
 
-with st.sidebar.expander("Advanced options"):
-    show_rolling = st.checkbox("Show rolling average")
-    rolling_window = st.slider(
-        "Rolling window (days)",
-        min_value=3,
-        max_value=number_of_days_in_df,
-        value=7,
-    )
-    show_volatility = st.checkbox("Show volatility summary")
+# with st.sidebar.expander("Advanced options"):
+#     show_rolling = st.checkbox("Show rolling average")
+#     rolling_window = st.slider(
+#         "Rolling window (days)",
+#         min_value=3,
+#         max_value=number_of_days_in_df,
+#         value=7,
+#     )
+#     show_volatility = st.checkbox("Show volatility summary")
