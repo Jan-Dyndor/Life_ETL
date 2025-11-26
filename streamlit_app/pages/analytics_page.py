@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import streamlit as st
-from functions.functions import load_data
+from functions.functions import load_data, filter_data
 
 
 df = (
@@ -42,6 +42,7 @@ date_range = st.sidebar.date_input(  # check what happens if we have mistake
     format="YYYY/MM/DD",
 )
 
+
 metric_type = st.sidebar.selectbox(
     "Metric",
     options=[
@@ -66,3 +67,10 @@ chart_type = st.sidebar.radio(
 #         value=7,
 #     )
 #     show_volatility = st.checkbox("Show volatility summary")
+
+filtered_data = filter_data(
+    data=df,
+    selected_currencies=seleected_currency,
+    date_range=(date_range),
+    metric=metric_type,
+)

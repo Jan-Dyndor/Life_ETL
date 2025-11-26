@@ -8,8 +8,8 @@ def load_data() -> pd.DataFrame:
 
 
 def filter_data(
-    data: pd.DataFrame, selected_currencies: list, date_range: tuple, metric: str
-) -> dict:
+    *, data: pd.DataFrame, selected_currencies: list, date_range: tuple, metric: str
+) -> pd.DataFrame:
 
     df_filterd = data[data["currency_code"].isin(selected_currencies)]
     df_filterd = df_filterd[df_filterd["date"].between(date_range[0], date_range[1])]
@@ -29,9 +29,7 @@ def filter_data(
         df_filterd["metric_value"] = (
             df_filterd["price_in_PLN_raw"] / currency_first_value * 100
         )
-    return {
-        "df_filtered": df_filterd,  # for tables
-    }
+    return df_filterd
 
 
 if __name__ == "__main__":
