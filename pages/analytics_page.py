@@ -2,7 +2,11 @@ import altair as alt
 import numpy as np
 import pandas as pd
 import streamlit as st
-from functions.functions import filter_data, load_data
+from streamlit_app.functions.functions import (
+    filter_data,
+    load_data,
+    download_data_and_info,
+)
 
 df = (
     load_data()
