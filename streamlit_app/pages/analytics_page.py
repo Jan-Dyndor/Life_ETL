@@ -73,18 +73,33 @@ filtered_data = filter_data(
     metric=metric_type,
 )
 
-if metric_type == "Rate (PLN)":
-    wide = filtered_data.pivot(
-        index="date", columns="currency_code", values="price_in_PLN_raw"
-    )
-    st.line_chart(wide)
-elif metric_type == "Daily change in %":
-    wide = filtered_data.pivot(
-        index="date", columns="currency_code", values="Daily change in %"
-    )
-    st.line_chart(wide)
+
+wide_df_plot = filtered_data.pivot(
+    index="date", columns="currency_code", values="metric"
+)
+
+if chart_type == "Line":
+    st.line_chart(wide_df_plot)
+elif chart_type == "Area":
+    st.area_chart(wide_df_plot)
 else:
-    wide = filtered_data.pivot(
-        index="date", columns="currency_code", values="Normalized"
+    import altair as alt
+
+    bar_chart = (
+        alt.Chart(filtered_data)
+        .mark_bar()
+        .encode(
+            x=alt.X("date_str:N", title="date"),
+            xOffset=alt.XOffset(
+                "currency_code:N"
+            ),  # KLUCZ: przesunięcie słupków obok siebie
+            y=alt.Y("metric:Q", title="metric", stack=None),
+            color=alt.Color("currency_code:N", title="currency"),
+            tooltip=["date", "currency_code", "metric"],
+        )
+        .properties(
+            height=400,
+        )
     )
-    st.line_chart(wide)
+
+    st.altair_chart(bar_chart, width="stretch")
