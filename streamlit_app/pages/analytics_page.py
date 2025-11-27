@@ -73,13 +73,18 @@ filtered_data = filter_data(
     metric=metric_type,
 )
 
-z = pd.DataFrame(
-    np.random.default_rng(0).standard_normal((20, 3)), columns=["a", "b", "c"]
-)
-
-print(filtered_data)
-
-wide = filtered_data.pivot(
-    index="date", columns="currency_code", values="price_in_PLN_raw"
-)
-st.line_chart(wide)
+if metric_type == "Rate (PLN)":
+    wide = filtered_data.pivot(
+        index="date", columns="currency_code", values="price_in_PLN_raw"
+    )
+    st.line_chart(wide)
+elif metric_type == "Daily change in %":
+    wide = filtered_data.pivot(
+        index="date", columns="currency_code", values="Daily change in %"
+    )
+    st.line_chart(wide)
+else:
+    wide = filtered_data.pivot(
+        index="date", columns="currency_code", values="Normalized"
+    )
+    st.line_chart(wide)
