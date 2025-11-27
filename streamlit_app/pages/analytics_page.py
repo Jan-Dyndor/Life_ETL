@@ -1,8 +1,8 @@
+import altair as alt
 import numpy as np
 import pandas as pd
 import streamlit as st
-from functions.functions import load_data, filter_data
-
+from functions.functions import filter_data, load_data
 
 df = (
     load_data()
@@ -83,8 +83,6 @@ if chart_type == "Line":
 elif chart_type == "Area":
     st.area_chart(wide_df_plot)
 else:
-    import altair as alt
-
     bar_chart = (
         alt.Chart(filtered_data)
         .mark_bar()
