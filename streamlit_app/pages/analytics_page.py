@@ -1,8 +1,8 @@
+import altair as alt
 import numpy as np
 import pandas as pd
 import streamlit as st
-from functions.functions import load_data, filter_data
-
+from functions.functions import filter_data, load_data
 
 df = (
     load_data()
@@ -73,13 +73,31 @@ filtered_data = filter_data(
     metric=metric_type,
 )
 
-z = pd.DataFrame(
-    np.random.default_rng(0).standard_normal((20, 3)), columns=["a", "b", "c"]
+
+wide_df_plot = filtered_data.pivot(
+    index="date", columns="currency_code", values="metric"
 )
 
-print(filtered_data)
+if chart_type == "Line":
+    st.line_chart(wide_df_plot)
+elif chart_type == "Area":
+    st.area_chart(wide_df_plot)
+else:
+    bar_chart = (
+        alt.Chart(filtered_data)
+        .mark_bar()
+        .encode(
+            x=alt.X("date_str:N", title="date"),
+            xOffset=alt.XOffset(
+                "currency_code:N"
+            ),  # KLUCZ: przesunięcie słupków obok siebie
+            y=alt.Y("metric:Q", title="metric", stack=None),
+            color=alt.Color("currency_code:N", title="currency"),
+            tooltip=["date", "currency_code", "metric"],
+        )
+        .properties(
+            height=400,
+        )
+    )
 
-wide = filtered_data.pivot(
-    index="date", columns="currency_code", values="price_in_PLN_raw"
-)
-st.line_chart(wide)
+    st.altair_chart(bar_chart, width="stretch")
