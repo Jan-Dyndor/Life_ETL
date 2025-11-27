@@ -1,9 +1,29 @@
+import base64
+
 import pandas as pd
-from datetime import datetime
+import requests
+
+from config.core import config
+
+URL: str = (
+    f"https://api.github.com/repos/Jan-Dyndor/Life_ETL/contents/data/{config.catalog.gold_table}.csv"
+)
+
+
+def download_data_and_info() -> None:  # TODO write cache , to downald once per 24 hours
+    result = requests.get(URL)
+    data = result.json()
+    sha = data["sha"]
+    encoded_data = data["content"]
+    decoded_bytes = base64.b64decode(encoded_data)
+    with open(f"./data/{config.catalog.gold_table}.csv", "wb") as f:
+        f.write(decoded_bytes)
 
 
 def load_data() -> pd.DataFrame:
-    df = pd.read_csv("../data/gold_table.csv")
+    df = pd.read_csv(
+        "./data/gold_table.csv"
+    )  # TODO write try catch there, and tets if no file found
     df["date"] = pd.to_datetime(df["date"])
     return df
 
@@ -40,3 +60,4 @@ def filter_data(
 
 if __name__ == "__main__":
     load_data()  # Learn more about it !
+    download_data_and_info()
