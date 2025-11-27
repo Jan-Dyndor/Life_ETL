@@ -6,7 +6,7 @@ from functions.functions import load_data, filter_data
 
 df = (
     load_data()
-)  # think about hwo to cache that and the needed below things to be faster becasue i will allways use it
+)  # TODO  think about hwo to cache that and the needed below things to be faster becasue i will allways use it
 all_currencies: np.ndarray = df["currency_code"].unique()
 default_currency: list = ["USD", "EUR"]
 number_of_days_in_df: int = len(df["date"].unique())
@@ -30,17 +30,24 @@ st.write("Welcome at Analitycs page! ")
 seleected_currency = st.sidebar.multiselect(
     "Select currencies",
     options=all_currencies,
-    default=default_currency,  # write test if no currencies were choosen
+    default=default_currency,  # TODO write test if no currencies were choosen
 )
 
+if not seleected_currency:
+    st.warning("Select Currency")
+    st.stop()
 
-date_range = st.sidebar.date_input(  # check what happens if we have mistake
+date_range = st.sidebar.date_input(  # TODO check what happens if we have mistake
     "Select available time range",
     value=(start_date, end_date),
     min_value=start_date,
     max_value=end_date,
     format="YYYY/MM/DD",
 )
+
+if len(date_range) != 2:
+    st.warning("Please select correct date")
+    st.stop()
 
 
 metric_type = st.sidebar.selectbox(
@@ -58,15 +65,6 @@ chart_type = st.sidebar.radio(
     horizontal=True,
 )
 
-# with st.sidebar.expander("Advanced options"):
-#     show_rolling = st.checkbox("Show rolling average")
-#     rolling_window = st.slider(
-#         "Rolling window (days)",
-#         min_value=3,
-#         max_value=number_of_days_in_df,
-#         value=7,
-#     )
-#     show_volatility = st.checkbox("Show volatility summary")
 
 filtered_data = filter_data(
     data=df,
@@ -74,3 +72,14 @@ filtered_data = filter_data(
     date_range=(date_range),
     metric=metric_type,
 )
+
+z = pd.DataFrame(
+    np.random.default_rng(0).standard_normal((20, 3)), columns=["a", "b", "c"]
+)
+
+print(filtered_data)
+
+wide = filtered_data.pivot(
+    index="date", columns="currency_code", values="price_in_PLN_raw"
+)
+st.line_chart(wide)

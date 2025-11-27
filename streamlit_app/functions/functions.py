@@ -10,9 +10,11 @@ def load_data() -> pd.DataFrame:
 def filter_data(
     *, data: pd.DataFrame, selected_currencies: list, date_range: tuple, metric: str
 ) -> pd.DataFrame:
+    start_date = pd.to_datetime(date_range[0])
+    end_date = pd.to_datetime(date_range[1])
 
     df_filterd = data[data["currency_code"].isin(selected_currencies)]
-    df_filterd = df_filterd[df_filterd["date"].between(date_range[0], date_range[1])]
+    df_filterd = df_filterd[df_filterd["date"].between(start_date, end_date)]
 
     df_filterd = df_filterd.sort_values(["currency_code", "date"])
 
