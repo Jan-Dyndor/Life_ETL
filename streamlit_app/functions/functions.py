@@ -1,7 +1,8 @@
-import base64
-
 import pandas as pd
+import streamlit as st
 import requests
+import base64
+import io
 
 from config.core import config
 
@@ -10,20 +11,18 @@ URL: str = (
 )
 
 
-def download_data_and_info() -> None:  # TODO write cache , to downald once per 24 hours
-    result = requests.get(URL)
-    data = result.json()
-    sha = data["sha"]
-    encoded_data = data["content"]
-    decoded_bytes = base64.b64decode(encoded_data)
-    with open(f"./data/{config.catalog.gold_table}.csv", "wb") as f:
-        f.write(decoded_bytes)
-
-
+@st.cache_data(ttl=24 * 60 * 60)  # refresh every 24hours = new data in GitHub
 def load_data() -> pd.DataFrame:
-    df = pd.read_csv(
-        "./data/gold_table.csv"
-    )  # TODO write try catch there, and tets if no file found
+    try:
+        result = requests.get(URL)
+        result.raise_for_status()
+    except requests.exceptions.HTTPError as err:
+        st.error("Issue occured while downloading the data {e}")
+        raise
+    encoded_data = result.json()["content"]
+    bytes_data = base64.b64decode(encoded_data)
+    str_data = bytes_data.decode("utf-8")
+    df = pd.read_csv(io.StringIO(str_data))
     df["date"] = pd.to_datetime(df["date"])
     return df
 
@@ -56,8 +55,3 @@ def filter_data(
             df_filterd["price_in_PLN_raw"] / currency_first_value * 100
         )
     return df_filterd
-
-
-if __name__ == "__main__":
-    load_data()  # Learn more about it !
-    download_data_and_info()
