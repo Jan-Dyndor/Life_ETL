@@ -1,9 +1,4 @@
 import streamlit as st
-import sys
-from streamlit_app.functions.functions import download_data_and_info
-
-download_data_and_info()
-print(sys.path)  # TODO del this
 
 st.title("📊 About Project — NBP Daily ETL & FX Data Explorer")
 

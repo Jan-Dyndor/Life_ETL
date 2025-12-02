@@ -2,15 +2,10 @@ import altair as alt
 import numpy as np
 import pandas as pd
 import streamlit as st
-from streamlit_app.functions.functions import (
-    filter_data,
-    load_data,
-    download_data_and_info,
-)
 
-df = (
-    load_data()
-)  # TODO  think about hwo to cache that and the needed below things to be faster becasue i will allways use it
+from streamlit_app.functions.functions import filter_data, load_data
+
+df = load_data()
 all_currencies: np.ndarray = df["currency_code"].unique()
 default_currency: list = ["USD", "EUR"]
 number_of_days_in_df: int = len(df["date"].unique())
