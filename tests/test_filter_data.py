@@ -95,12 +95,10 @@ def test_fiter_data_metric_normal(sample_fx_data):
     )
 
 
-def test_filter_data_metric_normal(sample_fx_data):
+def test_filter_data_sorting(sample_fx_data):
     selected_currency: list[str] = ["USD"]
     date_range: tuple = ("2025-11-21", "2025-11-23")
     metric: str = "Rate (PLN)"
-
-    expected_output = pd.Series([3.6933, 3.765, 3.998], name="metric")
 
     data_frame = filter_data(
         data=sample_fx_data,
@@ -109,6 +107,52 @@ def test_filter_data_metric_normal(sample_fx_data):
         metric=metric,
     )
 
+    sorted_df = pd.Series(["2025-11-21", "2025-11-22", "2025-11-23"], name="date")
+    sorted_df = pd.to_datetime(sorted_df)
+    pandas_testing.assert_series_equal(data_frame["date"], sorted_df, check_index=False)
+
+
+def test_filter_data_sorting_multipe_currencies(sample_fx_data):
+    selected_currency: list[str] = ["USD", "EUR"]
+    date_range: tuple = ("2025-11-21", "2025-11-23")
+    metric: str = "Rate (PLN)"
+
+    data_frame = filter_data(
+        data=sample_fx_data,
+        selected_currencies=selected_currency,
+        date_range=date_range,
+        metric=metric,
+    )
+
+    sorted_df = pd.Series(
+        [
+            "2025-11-21",
+            "2025-11-22",
+            "2025-11-23",
+            "2025-11-21",
+            "2025-11-22",
+            "2025-11-23",
+        ],
+        name="date",
+    )
+    sorted_df = pd.to_datetime(sorted_df)
+    pandas_testing.assert_series_equal(data_frame["date"], sorted_df, check_index=False)
+
+
+def test_filter_data_date_str(sample_fx_data):
+    selected_currency: list[str] = ["USD"]
+    date_range: tuple = ("2025-11-21", "2025-11-22")
+    metric: str = "Rate (PLN)"
+
+    data_frame = filter_data(
+        data=sample_fx_data,
+        selected_currencies=selected_currency,
+        date_range=date_range,
+        metric=metric,
+    )
+
+    expected_date: pd.Series = pd.Series(["2025-11-21", "2025-11-22"], name="date_str")
+
     pandas_testing.assert_series_equal(
-        expected_output, data_frame["metric"], check_index=False
+        expected_date, data_frame["date_str"], check_index=False
     )
