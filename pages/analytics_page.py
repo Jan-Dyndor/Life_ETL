@@ -87,9 +87,7 @@ else:
         .mark_bar()
         .encode(
             x=alt.X("date_str:N", title="date"),
-            xOffset=alt.XOffset(
-                "currency_code:N"
-            ),  # KLUCZ: przesunięcie słupków obok siebie
+            xOffset=alt.XOffset("currency_code:N"),
             y=alt.Y("metric:Q", title="metric", stack=None),
             color=alt.Color("currency_code:N", title="currency"),
             tooltip=["date", "currency_code", "metric"],

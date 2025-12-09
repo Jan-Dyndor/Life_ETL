@@ -17,7 +17,7 @@ def load_data() -> pd.DataFrame:
         result = requests.get(URL)
         result.raise_for_status()
     except requests.exceptions.HTTPError as err:
-        st.error("Issue occured while downloading the data {e}")
+        st.error(f"Issue occured while downloading the data {err}")
         raise
     encoded_data = result.json()["content"]
     bytes_data = base64.b64decode(encoded_data)
