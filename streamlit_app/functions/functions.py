@@ -7,7 +7,7 @@ from loguru import logger
 from config.core import config
 
 URL: str = (
-    f"https://api.github.com/repos/Jan-Dyndor/Life_ETL/contents/data/{config.catalog.gold_table}.cs"
+    f"https://api.github.com/repos/Jan-Dyndor/Life_ETL/contents/data/{config.catalog.gold_table}.csv"
 )
 
 
