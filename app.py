@@ -1,5 +1,8 @@
 import streamlit as st
+import logging  # run and configure logger - once. Auto run from init import
+from loguru import logger
 
+logger.info("User entered main page")
 st.title("📊 About Project — NBP Daily ETL & FX Data Explorer")
 
 st.markdown(
