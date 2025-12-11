@@ -2,10 +2,17 @@ import altair as alt
 import numpy as np
 import pandas as pd
 import streamlit as st
+from loguru import logger
 
 from streamlit_app.functions.functions import filter_data, load_data
 
-df = load_data()
+logger.info("User enetered analytics page")
+
+try:
+    df = load_data()
+except Exception:
+    st.stop()
+
 all_currencies: np.ndarray = df["currency_code"].unique()
 default_currency: list = ["USD", "EUR"]
 number_of_days_in_df: int = len(df["date"].unique())
