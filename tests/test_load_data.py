@@ -1,9 +1,9 @@
 import base64
 from unittest.mock import MagicMock, patch
 
-import numpy as np
 import pandas as pd
 import pytest
+import requests
 from pandas import testing as pd_testing
 
 from streamlit_app.functions.functions import load_data
@@ -54,6 +54,7 @@ def github_data():
 def fake_json_response(github_data):
     data = {"content": github_data}
     yield data
+    del data
 
 
 def test_download_data_happy(fake_json_response):
@@ -62,14 +63,39 @@ def test_download_data_happy(fake_json_response):
         fake_response.status_code = 200
         fake_response.raise_for_status.side_effect = None
         fake_response.json.return_value = fake_json_response
+
         mock_get.return_value = fake_response
 
         df = load_data()
         expected = pd.Series(["USD", "EUR"])
         unique = pd.Series(df["currency_code"].unique())
+
         pd_testing.assert_series_equal(
             unique, expected, check_index=False, check_names=False
         )
         assert fake_response.status_code == 200
 
-        assert fake_response.status_code == 200
+
+def test_download_data_bad_http(fake_json_response):
+    with patch("streamlit_app.functions.functions.requests.get") as mock_get:
+        fake_mock = MagicMock()
+        fake_mock.status_code = 404
+        fake_mock.raise_for_status.side_effect = requests.exceptions.HTTPError(
+            response=fake_mock
+        )
+
+        mock_get.return_value = fake_mock
+
+        with pytest.raises(requests.exceptions.HTTPError):
+            load_data.__wrapped__()  # type: ignore # Funcion has streamlit decorator that cashes the data. So if funtion ran once in 24h its cashed and want be called = test fails
+
+
+def test_download_data_network_error():
+    with patch("streamlit_app.functions.functions.requests.get") as mock_get:
+        fake_mock = MagicMock()
+        fake_mock.raise_for_status.side_effect = requests.exceptions.Timeout()
+
+        mock_get.return_value = fake_mock
+
+        with pytest.raises(requests.exceptions.Timeout):
+            load_data.__wrapped__()  # type: ignore
