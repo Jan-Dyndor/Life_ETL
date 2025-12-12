@@ -1,5 +1,7 @@
 # Life_ETL – Fully Automated Databricks ETL Pipeline (NBP API)
 
+# Deployed on streamlit: https://lifeetl-tumyuyaf3tuxwfok8ssf5c.streamlit.app/
+
 ## Overview
 
 **Life_ETL** is a fully automated, end-to-end ETL (Extract–Transform–Load) data pipeline built on **Databricks**.  
